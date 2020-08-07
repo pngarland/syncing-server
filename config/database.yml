@@ -35,6 +35,7 @@ staging:
 
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
 
 docker_development:
   <<: *default
