@@ -12,7 +12,10 @@
 
 ActiveRecord::Schema.define(version: 20200605085931) do
 
-  create_table "extension_settings", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "extension_settings", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
     t.string "extension_id"
     t.boolean "mute_emails", default: false
     t.datetime "created_at", null: false
@@ -20,17 +23,15 @@ ActiveRecord::Schema.define(version: 20200605085931) do
     t.index ["extension_id"], name: "index_extension_settings_on_extension_id"
   end
 
-  create_table "item_revisions", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "item_revisions", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
     t.string "item_uuid", limit: 36, null: false
     t.string "revision_uuid", limit: 36, null: false
     t.index ["item_uuid"], name: "index_item_revisions_on_item_uuid"
     t.index ["revision_uuid"], name: "index_item_revisions_on_revision_uuid"
   end
 
-  create_table "items", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "duplicate_of", limit: 36
-    t.string "items_key_id"
-    t.text "content", limit: 16777215
+  create_table "items", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
+    t.text "content"
     t.string "content_type"
     t.text "enc_item_key"
     t.string "auth_hash"
@@ -39,6 +40,8 @@ ActiveRecord::Schema.define(version: 20200605085931) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "last_user_agent"
+    t.string "items_key_id"
+    t.string "duplicate_of", limit: 36
     t.index ["content_type"], name: "index_items_on_content_type"
     t.index ["deleted"], name: "index_items_on_deleted"
     t.index ["updated_at"], name: "index_items_on_updated_at"
@@ -47,8 +50,8 @@ ActiveRecord::Schema.define(version: 20200605085931) do
     t.index ["user_uuid"], name: "index_items_on_user_uuid"
   end
 
-  create_table "revisions", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.text "content", limit: 16777215
+  create_table "revisions", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
+    t.text "content"
     t.string "content_type"
     t.string "items_key_id"
     t.text "enc_item_key"
@@ -58,7 +61,7 @@ ActiveRecord::Schema.define(version: 20200605085931) do
     t.index ["created_at"], name: "index_revisions_on_created_at"
   end
 
-  create_table "sessions", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "sessions", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
     t.string "user_uuid"
     t.text "user_agent"
     t.string "api_version"
@@ -73,7 +76,7 @@ ActiveRecord::Schema.define(version: 20200605085931) do
     t.index ["user_uuid"], name: "index_sessions_on_user_uuid"
   end
 
-  create_table "users", primary_key: "uuid", id: :string, limit: 36, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "users", primary_key: "uuid", id: :string, limit: 36, force: :cascade do |t|
     t.string "email"
     t.string "pw_func"
     t.string "pw_alg"
