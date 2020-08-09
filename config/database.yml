@@ -10,16 +10,11 @@
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 #
 default: &default
-  adapter: mysql2
-  encoding: utf8
-  pool: <%= ENV['DB_POOL_SIZE'] %>
-  wait_timeout: <%= ENV['DB_WAIT_TIMEOUT'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  database: <%= ENV['DB_DATABASE'] %>
-  host: <%= ENV['DB_HOST'] %>
-  port: <%= ENV['DB_PORT'] %>
-  reconnect: true
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
@@ -40,6 +35,7 @@ staging:
 
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
 
 docker_development:
   <<: *default
